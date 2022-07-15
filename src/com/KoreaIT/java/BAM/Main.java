@@ -82,24 +82,24 @@ public class Main {
 				
 				int id = Integer.parseInt(cmdBits[2]);
 				
-				Article foundArticle = null;
+				int foundIndex = -1;
 				
 				for (int i = 0; i < articles.size(); i ++) {
 					Article article = articles.get(i);
 					
 					if(article.id == id) {
-						foundArticle = article;
+						foundIndex = i;
 						break;
 					}
 					
 				}
 				
-				if (foundArticle == null) {
+				if (foundIndex == -1) {
 					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
 					continue;
 				}
 				
-				articles.remove(id - 1);
+				articles.remove(foundIndex);
 				System.out.printf("%d번 게시물이 삭제되었습니다.\n", id);
 				
 			} else {
