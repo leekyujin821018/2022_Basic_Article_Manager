@@ -88,8 +88,7 @@ public class Main {
 					Article article = articles.get(i);
 					
 					if(article.id == id) {
-						articles.remove(id-1);
-						System.out.printf("%d번 게시물이 삭제되었습니다.\n", id);
+						foundArticle = article;
 						break;
 					}
 					
@@ -99,6 +98,10 @@ public class Main {
 					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
 					continue;
 				}
+				
+				articles.remove(id - 1);
+				System.out.printf("%d번 게시물이 삭제되었습니다.\n", id);
+				
 			} else {
 				System.out.println("존재하지 않는 명령어입니다.");
 			}
