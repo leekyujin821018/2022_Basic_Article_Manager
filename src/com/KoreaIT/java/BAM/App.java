@@ -5,12 +5,15 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.KoreaIT.java.BAM.dto.Article;
+import com.KoreaIT.java.BAM.dto.Member;
 import com.KoreaIT.java.BAM.util.Util;
 
 public class App {
 	private List<Article> articles;
+	private List<Member> members;
 
 	public App() {
+		members = new ArrayList<>();
 		articles = new ArrayList<>();
 	}
 
@@ -34,33 +37,53 @@ public class App {
 				break;
 			}
 
-			if (cmd.startsWith("article list")) {
+			if (cmd.equals("member join")) {
+				int id = members.size() + 1;
+				String regDate = Util.getNowDateStr();
+				System.out.printf("로그인 아이디 : ");
+				String loginId = sc.nextLine();
+
+				System.out.printf("로그인 비밀번호 : ");
+				String loginPw = sc.nextLine();
+
+				System.out.printf("로그인 비밀번호 확인 : ");
+				String loginPwCheck = sc.nextLine();
+
+				System.out.printf("이름 : ");
+				String name = sc.nextLine();
+
+				Member member = new Member(id, regDate, loginId, loginPw, name);
+				members.add(member);
+
+				System.out.printf("%d번님의 회원가입이 완료되었습니다.\n", id);
+			}
+			else if (cmd.startsWith("article list")) {
 				if (articles.size() == 0) {
 					System.out.println("게시글이 없습니다.");
 					continue;
 				}
-				
+
 				String searchKeyword = cmd.substring("article list".length()).trim();
-				
+
 				System.out.printf("검색어 : %s\n", searchKeyword);
-				
+
 				List<Article> forPrintArticles = articles;
-				
+
 				if (searchKeyword.length() > 0) {
 					forPrintArticles = new ArrayList<>();
-					
+
 					for (Article article : articles) {
-						if(article.title.contains(searchKeyword)) {
+						if (article.title.contains(searchKeyword)) {
 							forPrintArticles.add(article);
 						}
 					}
-					
+
 					if (forPrintArticles.size() == 0) {
 						System.out.println("검색 결과가 없습니다.");
 						continue;
 					}
 				}
-				
+
 				System.out.printf("번호  |     제목     |        %5s          |  조회\n", "날짜");
 
 				for (int i = forPrintArticles.size() - 1; i >= 0; i--) {
