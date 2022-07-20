@@ -40,14 +40,35 @@ public class App {
 			if (cmd.equals("member join")) {
 				int id = members.size() + 1;
 				String regDate = Util.getNowDateStr();
-				System.out.printf("로그인 아이디 : ");
-				String loginId = sc.nextLine();
 
-				System.out.printf("로그인 비밀번호 : ");
-				String loginPw = sc.nextLine();
+				String loginId = null;
 
-				System.out.printf("로그인 비밀번호 확인 : ");
-				String loginPwCheck = sc.nextLine();
+				while (true) {
+					System.out.printf("로그인 아이디 : ");
+					loginId = sc.nextLine();
+
+					if (isJoinableLoginId(loginId) == false) {
+						System.out.printf("%s은(는) 이미 사용중인 아이디입니다.\n", loginId);
+						continue;
+					}
+					break;
+				}
+
+				String loginPw = null;
+				String loginPwConfirm = null;
+
+				while (true) {
+					System.out.printf("로그인 비밀번호 : ");
+					loginPw = sc.nextLine();
+					System.out.printf("로그인 비밀번호 확인 : ");
+					loginPwConfirm = sc.nextLine();
+
+					if (loginPw.equals(loginPwConfirm) == false) {
+						System.out.println("비밀번호를 다시 입력해주세요.");
+						continue;
+					}
+					break;
+				}
 
 				System.out.printf("이름 : ");
 				String name = sc.nextLine();
@@ -55,9 +76,8 @@ public class App {
 				Member member = new Member(id, regDate, loginId, loginPw, name);
 				members.add(member);
 
-				System.out.printf("%d번님의 회원가입이 완료되었습니다.\n", id);
-			}
-			else if (cmd.startsWith("article list")) {
+				System.out.printf("%s님의 회원가입이 완료되었습니다.\n", loginId);
+			} else if (cmd.startsWith("article list")) {
 				if (articles.size() == 0) {
 					System.out.println("게시글이 없습니다.");
 					continue;
@@ -177,6 +197,28 @@ public class App {
 
 		System.out.println("==프로그램 끝==");
 		sc.close();
+	}
+
+	private boolean isJoinableLoginId(String loginId) {
+		int index = getMemberIndexByLoginId(loginId);
+
+		if (index == -1) {
+			return true;
+		}
+
+		return false;
+	}
+
+	private int getMemberIndexByLoginId(String loginId) {
+		int i = 0;
+		for (Member member : members) {
+			if(member.loginId.equals(loginId)) {
+				return i;
+			}
+			i++;
+		}
+
+		return -1;
 	}
 
 	private int getArticleIndexById(int id) {
