@@ -1,5 +1,6 @@
 package com.KoreaIT.java.BAM.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -12,6 +13,12 @@ public class MemberController extends Controller {
 	private String cmd;
 	private String actionMethodName;
 	
+	public MemberController(Scanner sc) {
+		this.sc = sc;
+		
+		members = new ArrayList<>();
+	}
+	
 	public void doAction(String cmd, String actionMethodName) {
 		this.cmd = cmd;
 		this.actionMethodName = actionMethodName;
@@ -20,21 +27,20 @@ public class MemberController extends Controller {
 		case "join":
 			doJoin();
 			break;
+		default:
+			System.out.println("존재하지 않는 명령어입니다.");
+			break;
 		}
 	}
 
-	public MemberController(Scanner sc, List<Member> members) {
-		this.sc = sc;
-		this.members = members;
-	}
-
-	public void doJoin() {
+	private void doJoin() {
 		int id = members.size() + 1;
 		String regDate = Util.getNowDateStr();
 
 		String loginId = null;
 
 		while (true) {
+			System.out.println("== 회원가입 ==");
 			System.out.printf("로그인 아이디 : ");
 			loginId = sc.nextLine();
 
@@ -67,7 +73,7 @@ public class MemberController extends Controller {
 		Member member = new Member(id, regDate, loginId, loginPw, name);
 		members.add(member);
 
-		System.out.printf("%s님의 회원가입이 완료되었습니다.\n", loginId);
+		System.out.printf("%d번님의 회원가입이 완료되었습니다.\n", id);
 
 	}
 
@@ -91,6 +97,14 @@ public class MemberController extends Controller {
 		}
 
 		return -1;
+	}
+
+	public void makeMemberTestData() {
+		System.out.println("테스트를 위한 멤 데이터를 생성합니다.");
+
+		members.add(new Member(1, Util.getNowDateStr(), "user1", "pw1", "user1"));
+		members.add(new Member(2, Util.getNowDateStr(), "user2", "pw2", "user2"));
+		members.add(new Member(3, Util.getNowDateStr(), "user3", "pw3", "user3"));
 	}
 
 }
