@@ -10,17 +10,38 @@ import com.KoreaIT.java.BAM.util.Util;
 public class ArticleController extends Controller {
 	private Scanner sc;
 	private List<Article> articles;
+	private String cmd;
+	private String actionMethodName;
+	
+	public void doAction(String cmd, String actionMethodName) {
+		this.cmd = cmd;
+		this.actionMethodName = actionMethodName;
+		
+		switch(actionMethodName) {
+		case "list":
+			showList();
+			break;
+		case "write":
+			doWrite();
+			break;
+		case "detail":
+			showDetail();
+			break;
+		case "modify":
+			doModify();
+			break;
+		case "delete":
+			doDelete();
+			break;
+		}
+	}
 	
 	public ArticleController(Scanner sc, List<Article> articles) {
 		this.sc = sc;
 		this.articles = articles;
 	}
 	
-	public void doAction(String cmd) {
-		
-	}
-
-	public void showList(String cmd) {
+	public void showList() {
 		if (articles.size() == 0) {
 			System.out.println("게시글이 없습니다.");
 			return;
@@ -74,8 +95,13 @@ public class ArticleController extends Controller {
 		System.out.printf("%d번 글이 생성되었습니다.\n", id);
 	}
 
-	public void showDetail(String cmd) {
+	public void showDetail() {
 		String[] cmdBits = cmd.split(" ");
+		
+		if (cmdBits.length == 2) {
+			System.out.println("명령어를 확인해주세요.");
+			return;
+		}
 
 		int id = Integer.parseInt(cmdBits[2]);
 
@@ -95,8 +121,13 @@ public class ArticleController extends Controller {
 		System.out.printf("조회 : %d\n", foundArticle.hit);
 	}
 	
-	public void doModify(String cmd) {
+	public void doModify() {
 		String[] cmdBits = cmd.split(" ");
+		
+		if (cmdBits.length == 2) {
+			System.out.println("명령어를 확인해주세요.");
+			return;
+		}
 
 		int id = Integer.parseInt(cmdBits[2]);
 
@@ -118,8 +149,13 @@ public class ArticleController extends Controller {
 		System.out.printf("%d번 게시물을 수정했습니다.\n", id);
 	}
 
-	public void doDelete(String cmd) {
+	public void doDelete() {
 		String[] cmdBits = cmd.split(" ");
+		
+		if (cmdBits.length == 2) {
+			System.out.println("명령어를 확인해주세요.");
+			return;
+		}
 
 		int id = Integer.parseInt(cmdBits[2]);
 
