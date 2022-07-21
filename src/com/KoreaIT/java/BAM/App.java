@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.KoreaIT.java.BAM.controller.ArticleController;
+import com.KoreaIT.java.BAM.controller.Controller;
 import com.KoreaIT.java.BAM.controller.MemberController;
 import com.KoreaIT.java.BAM.dto.Article;
 import com.KoreaIT.java.BAM.dto.Member;
@@ -25,7 +26,7 @@ public class App {
 		makeTestData();
 
 		Scanner sc = new Scanner(System.in);
-		
+
 		MemberController memberController = new MemberController(sc, members);
 		ArticleController articleController = new ArticleController(sc, articles);
 
@@ -41,6 +42,29 @@ public class App {
 			if (cmd.equals("exit")) {
 				break;
 			}
+
+			String[] cmdBits = cmd.split(" ");
+			
+			if(cmdBits.length == 1) {
+				System.out.println("명령어를 확인해주세요.");
+				continue;
+			}
+			
+			String controllerName = cmdBits[0];
+			String actionMethodName = cmdBits[1];
+
+			Controller controller = null;
+
+			if (controllerName.equals("article")) {
+				controller = articleController;
+			} else if (controllerName.equals("member")) {
+				controller = memberController;
+			} else {
+				System.out.println("존재하지 않는 명령어입니다.");
+				continue;
+			}
+			
+			controller.doAction(cmd);
 
 			if (cmd.equals("member join")) {
 				memberController.doJoin();
@@ -62,8 +86,6 @@ public class App {
 		System.out.println("==프로그램 끝==");
 		sc.close();
 	}
-
-	
 
 	private void makeTestData() {
 		System.out.println("테스트를 위한 게시물 데이터를 생성합니다.");

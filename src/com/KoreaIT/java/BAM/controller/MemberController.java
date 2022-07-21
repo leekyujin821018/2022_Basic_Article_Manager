@@ -6,15 +6,19 @@ import java.util.Scanner;
 import com.KoreaIT.java.BAM.dto.Member;
 import com.KoreaIT.java.BAM.util.Util;
 
-public class MemberController {
+public class MemberController extends Controller {
 	private Scanner sc;
 	private List<Member> members;
-	
+
 	public MemberController(Scanner sc, List<Member> members) {
 		this.sc = sc;
 		this.members = members;
 	}
-	
+
+	public void doAction(String cmd) {
+
+	}
+
 	public void doJoin() {
 		int id = members.size() + 1;
 		String regDate = Util.getNowDateStr();
@@ -55,9 +59,9 @@ public class MemberController {
 		members.add(member);
 
 		System.out.printf("%s님의 회원가입이 완료되었습니다.\n", loginId);
-		
+
 	}
-	
+
 	private boolean isJoinableLoginId(String loginId) {
 		int index = getMemberIndexByLoginId(loginId);
 
@@ -71,7 +75,7 @@ public class MemberController {
 	private int getMemberIndexByLoginId(String loginId) {
 		int i = 0;
 		for (Member member : members) {
-			if(member.loginId.equals(loginId)) {
+			if (member.loginId.equals(loginId)) {
 				return i;
 			}
 			i++;
