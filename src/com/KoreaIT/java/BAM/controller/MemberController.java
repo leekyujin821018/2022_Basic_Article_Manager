@@ -12,6 +12,7 @@ public class MemberController extends Controller {
 	private List<Member> members;
 	private String cmd;
 	private String actionMethodName;
+	private Member loginedMember;
 	
 	public MemberController(Scanner sc) {
 		this.sc = sc;
@@ -27,10 +28,60 @@ public class MemberController extends Controller {
 		case "join":
 			doJoin();
 			break;
+		case "login":
+			doLogin();
+			break;
+		case "profile":
+			showProfile();
+			break;
 		default:
 			System.out.println("존재하지 않는 명령어입니다.");
 			break;
 		}
+	}
+
+	private void showProfile() {
+
+		System.out.println("== 현재 로그인 한 회원 정보 ==");
+		
+		if (loginedMember == null) {
+			System.out.println("로그아웃 상태입니다.");
+			return;
+		}
+		
+		System.out.printf("== %s 회원님 상세정보 ==\n", loginedMember.loginId);
+		System.out.printf("회원번호 : %d\n", loginedMember.id);
+		System.out.printf("아이디 : %s\n", loginedMember.loginId);
+		System.out.printf("날짜 : %s\n", loginedMember.regDate);
+		System.out.printf("비밀번호 : %s\n", loginedMember.loginPw);
+		System.out.printf("이름 : %s\n", loginedMember.name);
+		
+	}
+
+	private void doLogin() {
+		
+		System.out.println("== 로그인 ==");
+		System.out.printf("로그인 아이디 : ");
+		String loginId = sc.nextLine();
+		System.out.printf("로그인 비밀번호 : ");
+		String loginPw = sc.nextLine();
+		
+		Member member = getMemberByLoginId(loginId);
+		
+		if (member == null) {
+			System.out.println("존재하지 않는 회원입니다.");
+			return;
+		}
+		
+		if (member.loginPw.equals(loginPw) == false) {
+			System.out.println("비밀번호를 확인해주세요.");
+			return;
+		}
+		
+		loginedMember = member;
+		
+		System.out.printf("%s님 환영합니다.\n", loginedMember.name);
+		
 	}
 
 	private void doJoin() {
@@ -99,8 +150,18 @@ public class MemberController extends Controller {
 		return -1;
 	}
 
+	private Member getMemberByLoginId(String loginId) {
+		int index = getMemberIndexByLoginId(loginId);
+		
+		if (index == -1) {
+			return null;
+		}
+		
+		return members.get(index);
+	}
+
 	public void makeMemberTestData() {
-		System.out.println("테스트를 위한 멤 데이터를 생성합니다.");
+		System.out.println("테스트를 위한 멤버 데이터를 생성합니다.");
 
 		members.add(new Member(1, Util.getNowDateStr(), "user1", "pw1", "user1"));
 		members.add(new Member(2, Util.getNowDateStr(), "user2", "pw2", "user2"));
