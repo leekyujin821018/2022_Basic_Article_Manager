@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.KoreaIT.java.BAM.container.Container;
 import com.KoreaIT.java.BAM.dto.Article;
+import com.KoreaIT.java.BAM.dto.Member;
 import com.KoreaIT.java.BAM.util.Util;
 
 public class ArticleController extends Controller {
@@ -16,7 +18,7 @@ public class ArticleController extends Controller {
 	public ArticleController(Scanner sc) {
 		this.sc = sc;
 
-		articles = new ArrayList<>();
+		articles = Container.articleDao.articles;
 	}
 
 	public void doAction(String cmd, String actionMethodName) {
@@ -77,8 +79,19 @@ public class ArticleController extends Controller {
 		for (int i = forPrintArticles.size() - 1; i >= 0; i--) {
 			Article article = forPrintArticles.get(i);
 
-			System.out.printf("%3d   |    %4s    |   %5s   |   %4s     | %5d\n", article.id, article.title, article.regDate,
-					article.memberId, article.hit);
+			String writerName = null;
+
+			List<Member> members = Container.memberDao.members;
+
+			for (Member member : members) {
+				if (article.memberId == member.id) {
+					writerName = member.name;
+					break;
+				}
+			}
+
+			System.out.printf("%3d   |    %4s    |   %5s   |  %4s   | %5d\n", article.id, article.title,
+					article.regDate, writerName, article.hit);
 		}
 	}
 
@@ -146,8 +159,8 @@ public class ArticleController extends Controller {
 			System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
 			return;
 		}
-		
-		if(foundArticle.memberId != loginedMember.id) {
+
+		if (foundArticle.memberId != loginedMember.id) {
 			System.out.println("게시물 수정 권한이 없습니다.");
 			return;
 		}
@@ -181,8 +194,8 @@ public class ArticleController extends Controller {
 			System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
 			return;
 		}
-		
-		if(foundArticle.memberId != loginedMember.id) {
+
+		if (foundArticle.memberId != loginedMember.id) {
 			System.out.println("게시물 삭제 권한이 없습니다.");
 			return;
 		}

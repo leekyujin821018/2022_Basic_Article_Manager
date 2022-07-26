@@ -1,9 +1,9 @@
 package com.KoreaIT.java.BAM.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.KoreaIT.java.BAM.container.Container;
 import com.KoreaIT.java.BAM.dto.Member;
 import com.KoreaIT.java.BAM.util.Util;
 
@@ -16,7 +16,7 @@ public class MemberController extends Controller {
 	public MemberController(Scanner sc) {
 		this.sc = sc;
 
-		members = new ArrayList<>();
+		members = Container.memberDao.members;
 	}
 
 	public void doAction(String cmd, String actionMethodName) {
@@ -59,19 +59,33 @@ public class MemberController extends Controller {
 		System.out.println("== 로그인 ==");
 		System.out.printf("로그인 아이디 : ");
 		String loginId = sc.nextLine();
-		System.out.printf("로그인 비밀번호 : ");
-		String loginPw = sc.nextLine();
 
 		Member member = getMemberByLoginId(loginId);
+
+		if (loginId == "") {
+			System.out.println("아이디를 입력해주세요.");
+			return;
+		}
 
 		if (member == null) {
 			System.out.println("존재하지 않는 회원입니다.");
 			return;
 		}
 
-		if (member.loginPw.equals(loginPw) == false) {
-			System.out.println("비밀번호를 확인해주세요.");
-			return;
+		while(true) {
+			System.out.printf("로그인 비밀번호 : ");
+			String loginPw = sc.nextLine();
+
+			if(loginPw == "") {
+				System.out.println("비밀번호를 입력해주세요");
+				continue;
+			}
+			
+			if (member.loginPw.equals(loginPw) == false) {
+				System.out.println("비밀번호를 확인해주세요.");
+				return;
+			}
+			break;
 		}
 
 		loginedMember = member;
@@ -91,6 +105,11 @@ public class MemberController extends Controller {
 			System.out.printf("로그인 아이디 : ");
 			loginId = sc.nextLine();
 
+			if (loginId == "") {
+				System.out.println("아이디를 입력해주세요.");
+				return;
+			}
+
 			if (isJoinableLoginId(loginId) == false) {
 				System.out.printf("%s은(는) 이미 사용중인 아이디입니다.\n", loginId);
 				continue;
@@ -104,6 +123,12 @@ public class MemberController extends Controller {
 		while (true) {
 			System.out.printf("로그인 비밀번호 : ");
 			loginPw = sc.nextLine();
+
+			if (loginPw == "") {
+				System.out.println("비밀번호를 입력해주세요.");
+				continue;
+			}
+
 			System.out.printf("로그인 비밀번호 확인 : ");
 			loginPwConfirm = sc.nextLine();
 
@@ -113,9 +138,19 @@ public class MemberController extends Controller {
 			}
 			break;
 		}
+		
+		String name = null;
 
-		System.out.printf("이름 : ");
-		String name = sc.nextLine();
+		while (true) {
+			System.out.printf("이름 : ");
+			name = sc.nextLine();
+			
+			if (name == "") {
+				System.out.println("이름을 입력해주세요.");
+				continue;
+			}
+			break;
+		}
 
 		Member member = new Member(id, regDate, loginId, loginPw, name);
 		members.add(member);
