@@ -57,33 +57,38 @@ public class MemberController extends Controller {
 
 	private void doLogin() {
 		System.out.println("== 로그인 ==");
-		System.out.printf("로그인 아이디 : ");
-		String loginId = sc.nextLine();
+		Member member = null;
 
-		Member member = getMemberByLoginId(loginId);
+		while (true) {
+			System.out.printf("로그인 아이디 : ");
+			String loginId = sc.nextLine();
 
-		if (loginId == "") {
-			System.out.println("아이디를 입력해주세요.");
-			return;
-		}
+			member = getMemberByLoginId(loginId);
 
-		if (member == null) {
-			System.out.println("존재하지 않는 회원입니다.");
-			return;
-		}
-
-		while(true) {
-			System.out.printf("로그인 비밀번호 : ");
-			String loginPw = sc.nextLine();
-
-			if(loginPw == "") {
-				System.out.println("비밀번호를 입력해주세요");
+			if (loginId.trim().length() == 0) {
+				System.out.println("아이디를 입력해주세요.");
 				continue;
 			}
-			
-			if (member.loginPw.equals(loginPw) == false) {
-				System.out.println("비밀번호를 확인해주세요.");
+
+			if (member == null) {
+				System.out.println("존재하지 않는 회원입니다.");
 				return;
+			}
+
+			while(true) {
+				System.out.printf("로그인 비밀번호 : ");
+				String loginPw = sc.nextLine();
+				
+				if (loginPw.trim().length() == 0) {
+					System.out.println("비밀번호를 입력해주세요");
+					continue;
+				}
+				
+				if (member.loginPw.equals(loginPw) == false) {
+					System.out.println("비밀번호를 확인해주세요.");
+					return;
+				}
+				break;				
 			}
 			break;
 		}
@@ -95,19 +100,20 @@ public class MemberController extends Controller {
 	}
 
 	private void doJoin() {
-		int id = Container.memberDao.getNewId();
+		int id = Container.memberDao.setNewId();
 		String regDate = Util.getNowDateStr();
 
 		String loginId = null;
 
+		System.out.println("== 회원가입 ==");
+
 		while (true) {
-			System.out.println("== 회원가입 ==");
 			System.out.printf("로그인 아이디 : ");
 			loginId = sc.nextLine();
 
-			if (loginId == "") {
+			if (loginId.trim().length() == 0) {
 				System.out.println("아이디를 입력해주세요.");
-				return;
+				continue;
 			}
 
 			if (isJoinableLoginId(loginId) == false) {
@@ -124,7 +130,7 @@ public class MemberController extends Controller {
 			System.out.printf("로그인 비밀번호 : ");
 			loginPw = sc.nextLine();
 
-			if (loginPw == "") {
+			if (loginPw.trim().length() == 0) {
 				System.out.println("비밀번호를 입력해주세요.");
 				continue;
 			}
@@ -138,13 +144,13 @@ public class MemberController extends Controller {
 			}
 			break;
 		}
-		
+
 		String name = null;
 
 		while (true) {
 			System.out.printf("이름 : ");
-			name = sc.nextLine();
-			
+			name = sc.nextLine().trim();
+
 			if (name == "") {
 				System.out.println("이름을 입력해주세요.");
 				continue;
@@ -154,7 +160,7 @@ public class MemberController extends Controller {
 
 		Member member = new Member(id, regDate, loginId, loginPw, name);
 		Container.memberDao.add(member);
-		
+
 		System.out.printf("%d번님의 회원가입이 완료되었습니다.\n", id);
 
 	}
@@ -194,9 +200,12 @@ public class MemberController extends Controller {
 	public void makeTestData() {
 		System.out.println("테스트를 위한 회원 데이터를 생성합니다.");
 
-		Container.memberDao.add(new Member(Container.memberDao.getNewId(), Util.getNowDateStr(), "user1", "pw1", "홍길동"));
-		Container.memberDao.add(new Member(Container.memberDao.getNewId(), Util.getNowDateStr(), "user2", "pw2", "이순신"));
-		Container.memberDao.add(new Member(Container.memberDao.getNewId(), Util.getNowDateStr(), "user3", "pw3", "임꺽정"));
+		Container.memberDao
+				.add(new Member(Container.memberDao.setNewId(), Util.getNowDateStr(), "user1", "pw1", "홍길동"));
+		Container.memberDao
+				.add(new Member(Container.memberDao.setNewId(), Util.getNowDateStr(), "user2", "pw2", "이순신"));
+		Container.memberDao
+				.add(new Member(Container.memberDao.setNewId(), Util.getNowDateStr(), "user3", "pw3", "임꺽정"));
 	}
 
 }
