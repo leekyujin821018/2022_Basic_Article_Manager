@@ -7,29 +7,33 @@ import com.KoreaIT.java.BAM.dao.MemberDao;
 import com.KoreaIT.java.BAM.dto.Member;
 
 public class MemberService {
-	private MemberDao memberdao;
+	private MemberDao memberDao;
 	
 	public MemberService() {
-		this.memberdao = Container.memberDao;
+		this.memberDao = Container.memberDao;
 	}
 
 	public Member getMemberByLoginId(String loginId) {
-		return memberdao.getMemberByLoginId(loginId);
+		return memberDao.getMemberByLoginId(loginId);
 	}
 
 	public int setNewId() {
-		return memberdao.setNewId();
+		return memberDao.setNewId();
 	}
 
 	public void add(Member member) {
-		memberdao.add(member);
+		memberDao.add(member);
 	}
 	
 	public boolean isJoinableLoginId(String loginId) {
-		return memberdao.isJoinableLoginId(loginId);
+		return memberDao.isJoinableLoginId(loginId);
 	}
 
 	public List<Member> getMembers() {
-		return memberdao.getMembers();
+		return memberDao.getMembers();
+	}
+
+	public String getMemberNameById(int id) {
+		return memberDao.getMemberNameById(id);
 	}
 }
